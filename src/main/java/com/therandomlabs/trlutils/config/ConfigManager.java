@@ -20,8 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class ConfigManager {
 	private static final Map<Class<?>, ConfigData> CONFIGS = new HashMap<>();
-	private static final Map<String, List<ConfigData>> MODID_TO_CONFIGS = new HashMap<>();
-
 	private static final List<Predicate<Field>> VERSION_CHECKERS = new ArrayList<>();
 
 	private static boolean client = true;
@@ -43,9 +41,7 @@ public final class ConfigManager {
 			throw new ConfigException(clazz.getName() + " is not a configuration class");
 		}
 
-		//We have to assume it's valid since if this is being loaded before Minecraft Forge is
-		//initialized (i.e. in a coremod), Loader.isModLoaded cannot be called
-		final String modid = config.modid();
+		final String id = config.id();
 
 		final String[] comment = config.comment();
 
@@ -56,7 +52,7 @@ public final class ConfigManager {
 		//Ensure path is valid by initializing it first
 		final String pathData = config.path();
 		final String pathString =
-				"config/" + (pathData.isEmpty() ? modid : config.path()) + ".toml";
+				"config/" + (pathData.isEmpty() ? id : config.path()) + ".toml";
 		final Path path = Paths.get(pathString).toAbsolutePath();
 
 		try {
@@ -66,12 +62,10 @@ public final class ConfigManager {
 		}
 
 		final List<TRLCategory> categories = new ArrayList<>();
-		loadCategories("", modid + ".config.", "", clazz, categories);
+		loadCategories("", id + ".config.", "", clazz, categories);
 		final ConfigData data = new ConfigData(comment, clazz, pathString, path, categories);
 
 		CONFIGS.put(clazz, data);
-		MODID_TO_CONFIGS.computeIfAbsent(modid, id -> new ArrayList<>()).add(data);
-
 		reloadFromDisk(clazz);
 	}
 

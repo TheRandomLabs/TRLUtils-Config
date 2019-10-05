@@ -15,10 +15,12 @@ public @interface Config {
 		String[] value();
 	}
 
+	//In the context of Minecraft, this refers to a Minecraft restart
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	@interface RequiresRestart {}
 
+	//In the context of Minecraft, this refers to a world reload
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target(ElementType.FIELD)
 	@interface RequiresReload {}
@@ -63,7 +65,7 @@ public @interface Config {
 		String value();
 	}
 
-	String modid();
+	String id();
 
 	String[] comment();
 
