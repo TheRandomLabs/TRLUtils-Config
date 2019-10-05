@@ -13,13 +13,13 @@ final class ConfigData {
 	final Class<?> clazz;
 	final String pathString;
 	final Path path;
-	final List<TRLCategory> categories;
+	final List<Category> categories;
 	final CommentedFileConfig config;
 	final Map<String, Object> delayedLoad = new HashMap<>();
 
 	ConfigData(
 			String[] comment, Class<?> clazz, String pathString, Path path,
-			List<TRLCategory> categories
+			List<Category> categories
 	) {
 		this.comment = Arrays.stream(comment).map(line -> "# " + line).collect(Collectors.toList());
 		this.clazz = clazz;

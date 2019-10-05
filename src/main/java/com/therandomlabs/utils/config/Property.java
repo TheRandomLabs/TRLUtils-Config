@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 //Enums are implemented as a special case here instead of in TRLTypeAdapters
 //Numbers also receive some special treatment
-final class TRLProperty {
+final class Property {
 	private final Field field;
 
 	private final String fullyQualifiedName;
@@ -40,7 +40,7 @@ final class TRLProperty {
 	private Object defaultValue;
 
 	@SuppressWarnings("unchecked")
-	TRLProperty(TRLCategory category, String name, Field field, String comment, String previous) {
+	Property(Category category, String name, Field field, String comment, String previous) {
 		this.field = field;
 
 		fullyQualifiedName = category.getFullyQualifiedName() + "." + name;
@@ -208,7 +208,7 @@ final class TRLProperty {
 		this.max = max;
 
 		final Config.Blacklist blacklist = field.getAnnotation(Config.Blacklist.class);
-		this.blacklist = blacklist == null ? null : blacklist.value();
+		this.blacklist = blacklist == null ? new String[0] : blacklist.value();
 
 		if(isArray) {
 			for(Object element : ArrayConverter.toBoxedArray(defaultValue)) {
@@ -242,6 +242,10 @@ final class TRLProperty {
 						append("\n Max: ").
 						append((long) max);
 			}
+		}
+
+		if(this.blacklist.length != 0) {
+			commentBuilder.append("\nBlacklist: ").append(Arrays.toString(this.blacklist));
 		}
 
 		commentBuilder.append("\n Default: ");

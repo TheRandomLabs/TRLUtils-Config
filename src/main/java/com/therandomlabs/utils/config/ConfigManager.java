@@ -61,7 +61,7 @@ public final class ConfigManager {
 			throw new ConfigException("Failed to create configuration directory", ex);
 		}
 
-		final List<TRLCategory> categories = new ArrayList<>();
+		final List<Category> categories = new ArrayList<>();
 		loadCategories("", id + ".config.", "", clazz, categories);
 		final ConfigData data = new ConfigData(comment, clazz, pathString, path, categories);
 
@@ -84,8 +84,8 @@ public final class ConfigManager {
 	public static void reloadFromConfig(Class<?> clazz) {
 		final ConfigData data = CONFIGS.get(clazz);
 
-		for(TRLCategory category : data.categories) {
-			for(TRLProperty property : category.properties) {
+		for(Category category : data.categories) {
+			for(Property property : category.properties) {
 				if(property.exists(data.config)) {
 					final String name = property.getFullyQualifiedName();
 
@@ -141,7 +141,7 @@ public final class ConfigManager {
 			subConfigs.subList(0, size).clear();
 		}
 
-		for(TRLCategory category : data.categories) {
+		for(Category category : data.categories) {
 			category.initialize(data.config);
 
 			category.onReload(false);
@@ -150,7 +150,7 @@ public final class ConfigManager {
 				category.onReload(true);
 			}
 
-			for(TRLProperty property : category.properties) {
+			for(Property property : category.properties) {
 				final String name = property.getFullyQualifiedName();
 
 				try {
@@ -223,7 +223,7 @@ public final class ConfigManager {
 
 	private static void loadCategories(
 			String fullyQualifiedNamePrefix, String languageKeyPrefix, String parentCategory,
-			Class<?> clazz, List<TRLCategory> categories
+			Class<?> clazz, List<Category> categories
 	) {
 		for(Field field : clazz.getDeclaredFields()) {
 			final Config.Category categoryData = field.getAnnotation(Config.Category.class);
@@ -262,7 +262,7 @@ public final class ConfigManager {
 			final Class<?> categoryClass = field.getType();
 			final String categoryName = parentCategory + name;
 
-			final TRLCategory category = new TRLCategory(
+			final Category category = new Category(
 					fullyQualifiedNamePrefix, languageKeyPrefix, categoryClass, comment,
 					categoryName
 			);
@@ -277,7 +277,7 @@ public final class ConfigManager {
 		}
 	}
 
-	private static void loadCategory(TRLCategory category) {
+	private static void loadCategory(Category category) {
 		for(Field field : category.clazz.getDeclaredFields()) {
 			final Config.Property propertyData = field.getAnnotation(Config.Property.class);
 
@@ -316,7 +316,7 @@ public final class ConfigManager {
 			final String previous = previousData == null ? null : previousData.value();
 
 			try {
-				category.properties.add(new TRLProperty(category, name, field, comment, previous));
+				category.properties.add(new Property(category, name, field, comment, previous));
 			} catch(RuntimeException ex) {
 				throw new ConfigException(name, ex);
 			}

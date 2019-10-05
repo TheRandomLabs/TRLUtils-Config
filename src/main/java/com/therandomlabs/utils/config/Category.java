@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.List;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 
-final class TRLCategory {
+final class Category {
 	final String fullyQualifiedName;
 	final String languageKeyPrefix;
 	final String languageKey;
 	final Class<?> clazz;
 	final String comment;
 	final String name;
-	final List<TRLProperty> properties = new ArrayList<>();
+	final List<Property> properties = new ArrayList<>();
 
 	final Method onReload;
 	final Method onReloadClient;
 
-	TRLCategory(
+	Category(
 			String fullyQualifiedNamePrefix, String languageKeyPrefix, Class<?> clazz,
 			String comment, String name
 	) {
