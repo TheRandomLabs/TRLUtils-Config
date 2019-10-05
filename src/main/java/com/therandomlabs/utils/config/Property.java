@@ -243,7 +243,7 @@ final class Property {
 		}
 
 		if(this.blacklist.length != 0) {
-			commentBuilder.append("\nBlacklist: ").append(Arrays.toString(this.blacklist));
+			commentBuilder.append("\n Blacklist: ").append(Arrays.toString(this.blacklist));
 		}
 
 		commentBuilder.append("\n Default: ");
