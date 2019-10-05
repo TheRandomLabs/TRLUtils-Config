@@ -309,7 +309,7 @@ final class TRLProperty {
 
 		//Validate
 		set(config, adapter.getValue(config, fullyQualifiedName, defaultValue));
-		return adapter.getValue(config, fullyQualifiedName, defaultValue);
+		return config.get(fullyQualifiedName);
 	}
 
 	String getAsString(CommentedFileConfig config) {
@@ -322,7 +322,7 @@ final class TRLProperty {
 	}
 
 	Object validate(Object value, boolean isArray) {
-		if(value == null && !adapter.canBeNull()) {
+		if(value == null && (!adapter.canBeNull() || nonNull)) {
 			value = defaultValue;
 		}
 
