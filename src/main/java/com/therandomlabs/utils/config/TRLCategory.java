@@ -1,4 +1,4 @@
-package com.therandomlabs.trlutils.config;
+package com.therandomlabs.utils.config;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

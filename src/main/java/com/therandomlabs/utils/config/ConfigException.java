@@ -1,4 +1,4 @@
-package com.therandomlabs.trlutils.config;
+package com.therandomlabs.utils.config;
 
 public class ConfigException extends RuntimeException {
 	private static final long serialVersionUID = 7219817454671602843L;

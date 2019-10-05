@@ -1,4 +1,4 @@
-package com.therandomlabs.trlutils.config.adapter;
+package com.therandomlabs.utils.config.adapter;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;

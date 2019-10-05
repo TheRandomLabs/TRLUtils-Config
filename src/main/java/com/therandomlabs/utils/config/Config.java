@@ -1,4 +1,4 @@
-package com.therandomlabs.trlutils.config;
+package com.therandomlabs.utils.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

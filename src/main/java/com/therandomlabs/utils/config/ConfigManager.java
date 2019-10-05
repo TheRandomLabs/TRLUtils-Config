@@ -1,4 +1,4 @@
-package com.therandomlabs.trlutils.config;
+package com.therandomlabs.utils.config;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

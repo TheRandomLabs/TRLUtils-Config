@@ -1,4 +1,4 @@
-package com.therandomlabs.trlutils.config;
+package com.therandomlabs.utils.config;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.therandomlabs.trlutils.config.adapter.TypeAdapter;
-import com.therandomlabs.trlutils.config.adapter.TypeAdapters;
+import com.therandomlabs.utils.config.adapter.TypeAdapter;
+import com.therandomlabs.utils.config.adapter.TypeAdapters;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 

@@ -1,8 +1,8 @@
-package com.therandomlabs.trlutils.config.adapter;
+package com.therandomlabs.utils.config.adapter;
 
 import java.util.Arrays;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.therandomlabs.trlutils.config.ArrayConverter;
+import com.therandomlabs.utils.config.ArrayConverter;
 
 public interface TypeAdapter {
 	default Object getValue(CommentedFileConfig config, String name, Object defaultValue) {

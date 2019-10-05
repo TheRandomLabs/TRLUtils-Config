@@ -1,4 +1,4 @@
-package com.therandomlabs.trlutils.config;
+package com.therandomlabs.utils.config;
 
 import org.apache.commons.lang3.ArrayUtils;
 
