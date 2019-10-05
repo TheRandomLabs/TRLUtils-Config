@@ -1,4 +1,4 @@
-package com.therandomlabs.utils.config.adapter;
+package com.therandomlabs.utils.config;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

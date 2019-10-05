@@ -7,8 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.therandomlabs.utils.config.adapter.TypeAdapter;
-import com.therandomlabs.utils.config.adapter.TypeAdapters;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 

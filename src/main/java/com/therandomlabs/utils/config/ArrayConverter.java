@@ -2,7 +2,7 @@ package com.therandomlabs.utils.config;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class ArrayConverter {
+final class ArrayConverter {
 	private ArrayConverter() {}
 
 	public static Object toPrimitiveArray(Object[] boxedArray) {

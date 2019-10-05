@@ -1,4 +1,4 @@
-package com.therandomlabs.utils.config.adapter;
+package com.therandomlabs.utils.config;
 
 import java.util.Arrays;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
