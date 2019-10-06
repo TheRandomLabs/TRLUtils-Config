@@ -154,11 +154,11 @@ public final class ConfigManager {
 				final String name = property.getFullyQualifiedName();
 
 				try {
-					property.get(data.config);
-
 					final Object delayedLoad = data.delayedLoad.get(name);
 
-					if(delayedLoad != null) {
+					if(delayedLoad == null) {
+						property.serialize(data.config);
+					} else {
 						data.config.set(name, delayedLoad);
 					}
 				} catch(Exception ex) {
