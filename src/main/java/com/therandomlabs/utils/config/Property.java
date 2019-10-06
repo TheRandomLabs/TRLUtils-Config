@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 //Enums are implemented as a special case here instead of in TRLTypeAdapters
 //Numbers also receive some special treatment
+@SuppressWarnings("rawtypes")
 final class Property {
 	private final Field field;
 
@@ -25,13 +26,19 @@ final class Property {
 
 	private final Class<?> enumClass;
 	private final Enum[] enumConstants;
+
 	private final String[] validValues;
 	private final String[] validValuesDisplay;
+
 	private final boolean nonNull;
+
 	private final double min;
 	private final double max;
+
 	private final String[] blacklist;
+
 	private final String comment;
+
 	private final boolean requiresRestart;
 	private final boolean requiresReload;
 

@@ -154,11 +154,13 @@ public final class ConfigManager {
 				final String name = property.getFullyQualifiedName();
 
 				try {
+					//Even if this is replaced by delayedLoad anyway, Property#serialize
+					//sets the comment so that it doesn't get removed below
+					property.serialize(data.config);
+
 					final Object delayedLoad = data.delayedLoad.get(name);
 
-					if(delayedLoad == null) {
-						property.serialize(data.config);
-					} else {
+					if(delayedLoad != null) {
 						data.config.set(name, delayedLoad);
 					}
 				} catch(Exception ex) {
