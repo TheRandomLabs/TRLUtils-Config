@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.ParsingException;
@@ -37,7 +38,7 @@ public final class ConfigManager {
 	public static void register(Class<?> clazz) {
 		final Config config = clazz.getAnnotation(Config.class);
 
-		if(config == null) {
+		if (config == null) {
 			throw new ConfigException(clazz.getName() + " is not a configuration class");
 		}
 
@@ -45,7 +46,7 @@ public final class ConfigManager {
 
 		final String[] comment = config.comment();
 
-		if(StringUtils.join(comment).trim().isEmpty()) {
+		if (StringUtils.join(comment).trim().isEmpty()) {
 			throw new ConfigException("Configuration comment may not be empty");
 		}
 
@@ -57,7 +58,7 @@ public final class ConfigManager {
 
 		try {
 			Files.createDirectories(path.getParent());
-		} catch(IOException ex) {
+		} catch (IOException ex) {
 			throw new ConfigException("Failed to create configuration directory", ex);
 		}
 
@@ -74,7 +75,8 @@ public final class ConfigManager {
 
 		try {
 			data.config.load();
-		} catch(ParsingException ex) {
+		} catch (ParsingException ex) {
+			ex.printStackTrace();
 			data.config.entrySet().clear();
 		}
 
@@ -84,16 +86,16 @@ public final class ConfigManager {
 	public static void reloadFromConfig(Class<?> clazz) {
 		final ConfigData data = CONFIGS.get(clazz);
 
-		for(Category category : data.categories) {
-			for(Property property : category.properties) {
-				if(property.exists(data.config)) {
+		for (Category category : data.categories) {
+			for (Property property : category.properties) {
+				if (property.exists(data.config)) {
 					final String name = property.getFullyQualifiedName();
 
 					try {
-						if(property.shouldLoad()) {
+						if (property.shouldLoad()) {
 							final Object delayedLoad = data.delayedLoad.get(name);
 
-							if(delayedLoad != null) {
+							if (delayedLoad != null) {
 								property.reloadDefault();
 								data.config.set(name, delayedLoad);
 								data.delayedLoad.remove(name);
@@ -105,7 +107,7 @@ public final class ConfigManager {
 							//is loaded too early, it isn't reset in the config
 							data.delayedLoad.put(name, data.config.get(name));
 						}
-					} catch(Exception ex) {
+					} catch (Exception ex) {
 						throw ConfigException.property(name, ex);
 					}
 				}
@@ -123,16 +125,16 @@ public final class ConfigManager {
 
 		//Remove all comments so we can tell which properties and categories no longer exist
 		//afterwards
-		while(!subConfigs.isEmpty()) {
+		while (!subConfigs.isEmpty()) {
 			final int size = subConfigs.size();
 
-			for(int i = 0; i < size; i++) {
-				for(CommentedConfig.Entry entry : subConfigs.get(i).entrySet()) {
+			for (int i = 0; i < size; i++) {
+				for (CommentedConfig.Entry entry : subConfigs.get(i).entrySet()) {
 					entry.removeComment();
 
 					final Object raw = entry.getRawValue();
 
-					if(raw instanceof CommentedConfig) {
+					if (raw instanceof CommentedConfig) {
 						subConfigs.add((CommentedConfig) raw);
 					}
 				}
@@ -141,16 +143,16 @@ public final class ConfigManager {
 			subConfigs.subList(0, size).clear();
 		}
 
-		for(Category category : data.categories) {
+		for (Category category : data.categories) {
 			category.initialize(data.config);
 
 			category.onReload(false);
 
-			if(client) {
+			if (client) {
 				category.onReload(true);
 			}
 
-			for(Property property : category.properties) {
+			for (Property property : category.properties) {
 				final String name = property.getFullyQualifiedName();
 
 				try {
@@ -160,10 +162,10 @@ public final class ConfigManager {
 
 					final Object delayedLoad = data.delayedLoad.get(name);
 
-					if(delayedLoad != null) {
+					if (delayedLoad != null) {
 						data.config.set(name, delayedLoad);
 					}
-				} catch(Exception ex) {
+				} catch (Exception ex) {
 					throw ConfigException.property(name, ex);
 				}
 			}
@@ -174,22 +176,22 @@ public final class ConfigManager {
 
 		subConfigs.add(data.config);
 
-		while(!subConfigs.isEmpty()) {
+		while (!subConfigs.isEmpty()) {
 			final int size = subConfigs.size();
 
-			for(int i = 0; i < size; i++) {
+			for (int i = 0; i < size; i++) {
 				final CommentedConfig subConfig = subConfigs.get(i);
 				final Set<String> toRemove = new HashSet<>();
 
-				for(CommentedConfig.Entry entry : subConfig.entrySet()) {
-					if(entry.getComment() == null) {
+				for (CommentedConfig.Entry entry : subConfig.entrySet()) {
+					if (entry.getComment() == null) {
 						toRemove.add(entry.getKey());
 						continue;
 					}
 
 					final Object raw = entry.getRawValue();
 
-					if(raw instanceof CommentedConfig) {
+					if (raw instanceof CommentedConfig) {
 						subConfigs.add((CommentedConfig) raw);
 					}
 				}
@@ -206,7 +208,7 @@ public final class ConfigManager {
 			final List<String> lines = new ArrayList<>(Files.readAllLines(data.path));
 			lines.addAll(0, data.comment);
 			Files.write(data.path, lines);
-		} catch(IOException ex) {
+		} catch (IOException ex) {
 			throw new ConfigException("Failed to write config", ex);
 		}
 	}
@@ -227,37 +229,37 @@ public final class ConfigManager {
 			String fullyQualifiedNamePrefix, String languageKeyPrefix, String parentCategory,
 			Class<?> clazz, List<Category> categories
 	) {
-		for(Field field : clazz.getDeclaredFields()) {
+		for (Field field : clazz.getDeclaredFields()) {
 			final Config.Category categoryData = field.getAnnotation(Config.Category.class);
 
-			if(categoryData == null) {
+			if (categoryData == null) {
 				continue;
 			}
 
 			final String comment = " " + StringUtils.join(categoryData.value(), "\n ");
 
-			if(comment.trim().isEmpty()) {
+			if (comment.trim().isEmpty()) {
 				throw new ConfigException("Category comment may not be empty");
 			}
 
 			final String name = field.getName();
 			final int modifiers = field.getModifiers();
 
-			if(!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) ||
+			if (!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) ||
 					!Modifier.isFinal(modifiers)) {
 				throw new ConfigException(name + " is not public static final");
 			}
 
 			boolean valid = true;
 
-			for(Predicate<Field> predicate : VERSION_CHECKERS) {
-				if(!predicate.test(field)) {
+			for (Predicate<Field> predicate : VERSION_CHECKERS) {
+				if (!predicate.test(field)) {
 					valid = false;
 					break;
 				}
 			}
 
-			if(!valid) {
+			if (!valid) {
 				continue;
 			}
 
@@ -280,37 +282,37 @@ public final class ConfigManager {
 	}
 
 	private static void loadCategory(Category category) {
-		for(Field field : category.clazz.getDeclaredFields()) {
+		for (Field field : category.clazz.getDeclaredFields()) {
 			final Config.Property propertyData = field.getAnnotation(Config.Property.class);
 
-			if(propertyData == null) {
+			if (propertyData == null) {
 				continue;
 			}
 
 			final String comment = " " + StringUtils.join(propertyData.value(), "\n ");
 
-			if(comment.trim().isEmpty()) {
+			if (comment.trim().isEmpty()) {
 				throw new ConfigException("Property comment may not be empty");
 			}
 
 			final String name = field.getName();
 			final int modifiers = field.getModifiers();
 
-			if(!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) ||
+			if (!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) ||
 					Modifier.isFinal(modifiers)) {
 				throw new ConfigException(name + " is not public static non-final");
 			}
 
 			boolean valid = true;
 
-			for(Predicate<Field> predicate : VERSION_CHECKERS) {
-				if(!predicate.test(field)) {
+			for (Predicate<Field> predicate : VERSION_CHECKERS) {
+				if (!predicate.test(field)) {
 					valid = false;
 					break;
 				}
 			}
 
-			if(!valid) {
+			if (!valid) {
 				continue;
 			}
 
@@ -319,7 +321,7 @@ public final class ConfigManager {
 
 			try {
 				category.properties.add(new Property(category, name, field, comment, previous));
-			} catch(RuntimeException ex) {
+			} catch (RuntimeException ex) {
 				throw new ConfigException(name, ex);
 			}
 		}

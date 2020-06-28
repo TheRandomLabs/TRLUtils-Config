@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -25,7 +26,7 @@ public final class TypeAdapters {
 				Character.class
 		};
 
-		for(Class clazz : defaultAdapterClasses) {
+		for (Class clazz : defaultAdapterClasses) {
 			register(clazz, new TypeAdapter() {});
 		}
 
@@ -155,7 +156,7 @@ public final class TypeAdapters {
 	public static TypeAdapter get(Class<?> clazz) {
 		final TypeAdapter adapter = ADAPTERS.get(clazz);
 
-		if(adapter != null) {
+		if (adapter != null) {
 			return adapter;
 		}
 
@@ -196,7 +197,7 @@ public final class TypeAdapters {
 			public Object getValue(CommentedFileConfig config, String name, Object defaultValue) {
 				try {
 					return parser.apply(config.get(name).toString());
-				} catch(NumberFormatException ignored) {}
+				} catch (NumberFormatException ignored) {}
 
 				return null;
 			}
@@ -213,7 +214,7 @@ public final class TypeAdapters {
 				return toArray.apply((((List<Number>) config.get(name)).stream().map(number -> {
 					try {
 						return converter.apply(Double.parseDouble(number.toString()));
-					} catch(NumberFormatException ignored) {}
+					} catch (NumberFormatException ignored) {}
 
 					return null;
 				}).filter(Objects::nonNull)));

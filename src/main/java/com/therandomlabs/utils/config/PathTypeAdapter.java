@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 
 public final class PathTypeAdapter implements TypeAdapter {
@@ -18,17 +19,17 @@ public final class PathTypeAdapter implements TypeAdapter {
 
 	@Override
 	public Object getValue(CommentedFileConfig config, String name, Object defaultValue) {
-		if(!isArray) {
+		if (!isArray) {
 			return getPath(config.get(name));
 		}
 
 		final List<String> list = config.get(name);
 		final List<Path> values = new ArrayList<>(list.size());
 
-		for(String element : list) {
+		for (String element : list) {
 			final Path path = getPath(element);
 
-			if(path != null) {
+			if (path != null) {
 				values.add(path);
 			}
 		}
@@ -38,7 +39,7 @@ public final class PathTypeAdapter implements TypeAdapter {
 
 	@Override
 	public void setValue(CommentedFileConfig config, String name, Object value) {
-		if(isArray) {
+		if (isArray) {
 			config.set(
 					name,
 					Arrays.stream((Object[]) value).
@@ -63,7 +64,7 @@ public final class PathTypeAdapter implements TypeAdapter {
 	private static Path getPath(String path) {
 		try {
 			return Paths.get(path).normalize();
-		} catch(InvalidPathException ignored) {}
+		} catch (InvalidPathException ignored) {}
 
 		return null;
 	}

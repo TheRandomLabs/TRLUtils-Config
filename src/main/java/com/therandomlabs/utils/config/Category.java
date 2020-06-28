@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 
 final class Category {
@@ -40,10 +41,10 @@ final class Category {
 	void onReload(boolean client) {
 		final Method method = client ? onReloadClient : onReload;
 
-		if(method != null) {
+		if (method != null) {
 			try {
 				method.invoke(null);
-			} catch(IllegalAccessException | InvocationTargetException ex) {
+			} catch (IllegalAccessException | InvocationTargetException ex) {
 				throw new ConfigException("Failed to reload configuration category", ex);
 			}
 		}
@@ -62,13 +63,13 @@ final class Category {
 
 		try {
 			onReload = clazz.getDeclaredMethod(name);
-		} catch(NoSuchMethodException ex) {
+		} catch (NoSuchMethodException ex) {
 			return null;
 		}
 
 		final int modifiers = onReload.getModifiers();
 
-		if(!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) ||
+		if (!Modifier.isPublic(modifiers) || !Modifier.isStatic(modifiers) ||
 				onReload.getReturnType() != void.class) {
 			throw new ConfigException(name + " must be public static void");
 		}

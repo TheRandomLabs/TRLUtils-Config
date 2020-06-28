@@ -1,8 +1,8 @@
 package com.therandomlabs.utils.config;
 
 import java.util.Arrays;
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.therandomlabs.utils.config.ArrayConverter;
 
 public interface TypeAdapter {
 	default Object getValue(CommentedFileConfig config, String name, Object defaultValue) {
@@ -10,7 +10,7 @@ public interface TypeAdapter {
 	}
 
 	default void setValue(CommentedFileConfig config, String name, Object value) {
-		if(isArray()) {
+		if (isArray()) {
 			config.set(name, Arrays.asList(ArrayConverter.toBoxedArray(value)));
 		} else {
 			config.set(name, value);

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,10 +56,10 @@ final class Property {
 
 		final Class<?> clazz = field.getType();
 
-		if(Enum.class.isAssignableFrom(clazz)) {
+		if (Enum.class.isAssignableFrom(clazz)) {
 			enumClass = clazz;
 			adapter = TypeAdapters.get(String.class);
-		} else if(Enum[].class.isAssignableFrom(clazz)) {
+		} else if (Enum[].class.isAssignableFrom(clazz)) {
 			enumClass = clazz.getComponentType();
 			adapter = TypeAdapters.get(String[].class);
 		} else {
@@ -66,7 +67,7 @@ final class Property {
 			adapter = TypeAdapters.get(clazz);
 		}
 
-		if(adapter == null) {
+		if (adapter == null) {
 			throw new ConfigException(
 					name,
 					new UnsupportedOperationException(
@@ -75,7 +76,7 @@ final class Property {
 			);
 		}
 
-		if(enumClass == null) {
+		if (enumClass == null) {
 			enumConstants = null;
 			validValues = null;
 			validValuesDisplay = null;
@@ -85,7 +86,7 @@ final class Property {
 
 			enumConstants = ((Class<? extends Enum>) enumClass).getEnumConstants();
 
-			for(Enum element : enumConstants) {
+			for (Enum element : enumConstants) {
 				validValues.add(element.name());
 				validValuesDisplay.add(element.toString());
 			}
@@ -100,13 +101,13 @@ final class Property {
 
 		try {
 			defaultValue = field.get(null);
-		} catch(IllegalAccessException ex) {
+		} catch (IllegalAccessException ex) {
 			throw ConfigException.property(name, ex);
 		}
 
 		nonNull = field.getAnnotation(Config.NonNull.class) != null;
 
-		if(defaultValue == null && (!adapter.canBeNull() || nonNull)) {
+		if (defaultValue == null && (!adapter.canBeNull() || nonNull)) {
 			throw new ConfigException(
 					"Default value of configuration property of type " + clazz.getName() +
 							" may not be null"
@@ -118,7 +119,7 @@ final class Property {
 		this.requiresRestart = field.getAnnotation(Config.RequiresRestart.class) != null;
 		this.requiresReload = field.getAnnotation(Config.RequiresReload.class) != null;
 
-		if(requiresRestart && requiresReload) {
+		if (requiresRestart && requiresReload) {
 			throw new ConfigException(
 					"The property " + name + " cannot both require a restart and a reload"
 			);
@@ -127,19 +128,19 @@ final class Property {
 		final double smallestMin;
 		final double largestMax;
 
-		if(defaultValue instanceof Byte) {
+		if (defaultValue instanceof Byte) {
 			smallestMin = Byte.MIN_VALUE;
 			largestMax = Byte.MAX_VALUE;
-		} else if(defaultValue instanceof Float) {
+		} else if (defaultValue instanceof Float) {
 			smallestMin = -Float.MAX_VALUE;
 			largestMax = Float.MAX_VALUE;
-		} else if(defaultValue instanceof Integer) {
+		} else if (defaultValue instanceof Integer) {
 			smallestMin = Integer.MIN_VALUE;
 			largestMax = Integer.MAX_VALUE;
-		} else if(defaultValue instanceof Long) {
+		} else if (defaultValue instanceof Long) {
 			smallestMin = Long.MIN_VALUE;
 			largestMax = Long.MAX_VALUE;
-		} else if(defaultValue instanceof Short) {
+		} else if (defaultValue instanceof Short) {
 			smallestMin = Short.MIN_VALUE;
 			largestMax = Short.MAX_VALUE;
 		} else {
@@ -153,57 +154,57 @@ final class Property {
 		double min = -Double.MAX_VALUE;
 		double max = Double.MAX_VALUE;
 
-		if(rangeInt != null) {
-			if(rangeDouble != null) {
+		if (rangeInt != null) {
+			if (rangeDouble != null) {
 				throw new ConfigException("Two ranges cannot be defined for property " + name);
 			}
 
 			min = rangeInt.min();
 			max = rangeInt.max();
 
-			if(min == Integer.MIN_VALUE && min < smallestMin) {
+			if (min == Integer.MIN_VALUE && min < smallestMin) {
 				min = smallestMin;
 			}
 
-			if(max == Integer.MAX_VALUE && max > largestMax) {
+			if (max == Integer.MAX_VALUE && max > largestMax) {
 				max = largestMax;
 			}
 
-			if(min > max) {
+			if (min > max) {
 				throw new ConfigException("min cannot be larger than max for property " + name);
 			}
-		} else if(rangeDouble != null) {
+		} else if (rangeDouble != null) {
 			min = rangeDouble.min();
 			max = rangeDouble.max();
 
-			if(min == -Double.MAX_VALUE) {
+			if (min == -Double.MAX_VALUE) {
 				min = smallestMin;
 			}
 
-			if(max == Double.MAX_VALUE) {
+			if (max == Double.MAX_VALUE) {
 				max = largestMax;
 			}
 
-			if(min > max) {
+			if (min > max) {
 				throw new ConfigException("min cannot be larger than max");
 			}
 		}
 
-		if(min == -Double.MAX_VALUE) {
+		if (min == -Double.MAX_VALUE) {
 			min = smallestMin;
 		}
 
-		if(max == Double.MAX_VALUE) {
+		if (max == Double.MAX_VALUE) {
 			max = largestMax;
 		}
 
-		if(min < smallestMin) {
+		if (min < smallestMin) {
 			throw new ConfigException(String.format(
 					"min is too small: %s < %s", min, smallestMin
 			));
 		}
 
-		if(max > largestMax) {
+		if (max > largestMax) {
 			throw new ConfigException(String.format(
 					"max is too large: %s > %s", max, largestMax
 			));
@@ -215,28 +216,28 @@ final class Property {
 		final Config.Blacklist blacklist = field.getAnnotation(Config.Blacklist.class);
 		this.blacklist = blacklist == null ? new String[0] : blacklist.value();
 
-		if(isArray) {
-			for(Object element : ArrayConverter.toBoxedArray(defaultValue)) {
-				if(ArrayUtils.contains(this.blacklist, adapter.asString(element))) {
+		if (isArray) {
+			for (Object element : ArrayConverter.toBoxedArray(defaultValue)) {
+				if (ArrayUtils.contains(this.blacklist, adapter.asString(element))) {
 					throw new ConfigException("Default value is blacklisted");
 				}
 			}
-		} else if(ArrayUtils.contains(this.blacklist, adapter.asString(defaultValue))) {
+		} else if (ArrayUtils.contains(this.blacklist, adapter.asString(defaultValue))) {
 			throw new ConfigException("Default value is blacklisted");
 		}
 
 		final StringBuilder commentBuilder = new StringBuilder(comment);
 
-		if(enumConstants != null) {
+		if (enumConstants != null) {
 			commentBuilder.append("\n Valid values:");
 
-			for(Enum element : enumConstants) {
+			for (Enum element : enumConstants) {
 				commentBuilder.append("\n ").append(element.name());
 			}
 		}
 
-		if(defaultValue instanceof Number) {
-			if(defaultValue instanceof Double || defaultValue instanceof Float) {
+		if (defaultValue instanceof Number) {
+			if (defaultValue instanceof Double || defaultValue instanceof Float) {
 				commentBuilder.append("\n Min: ").
 						append(min).
 						append("\n Max: ").
@@ -249,13 +250,13 @@ final class Property {
 			}
 		}
 
-		if(this.blacklist.length != 0) {
+		if (this.blacklist.length != 0) {
 			commentBuilder.append("\n Blacklist: ").append(Arrays.toString(this.blacklist));
 		}
 
 		commentBuilder.append("\n Default: ");
 
-		if(isArray) {
+		if (isArray) {
 			commentBuilder.append(
 					Arrays.stream(ArrayConverter.toBoxedArray(defaultValue)).
 							map(adapter::asString).
@@ -308,8 +309,8 @@ final class Property {
 	}
 
 	Object get(CommentedFileConfig config) {
-		if(!config.contains(fullyQualifiedName)) {
-			if(previous != null && config.contains(previous)) {
+		if (!config.contains(fullyQualifiedName)) {
+			if (previous != null && config.contains(previous)) {
 				config.set(fullyQualifiedName, config.get(previous));
 			} else {
 				set(config, defaultValue);
@@ -331,20 +332,20 @@ final class Property {
 	}
 
 	Object validate(Object value, boolean isArray) {
-		if(value == null && (!adapter.canBeNull() || nonNull)) {
+		if (value == null && (!adapter.canBeNull() || nonNull)) {
 			value = defaultValue;
 		}
 
-		if(isArray) {
+		if (isArray) {
 			final boolean primitive = !(value instanceof Object[]);
 			final Object[] boxedArray = ArrayConverter.toBoxedArray(value);
 			final List<Object> filtered = new ArrayList<>();
 
-			for(Object element : boxedArray) {
-				if(element != null) {
+			for (Object element : boxedArray) {
+				if (element != null) {
 					final Object validated = validate(element, false);
 
-					if(validated != null) {
+					if (validated != null) {
 						filtered.add(validated);
 					}
 				}
@@ -352,40 +353,40 @@ final class Property {
 
 			final Object[] filteredArray = filtered.toArray(Arrays.copyOf(boxedArray, 0));
 			return primitive ? ArrayConverter.toPrimitiveArray(filteredArray) : filteredArray;
-		} else if(ArrayUtils.contains(blacklist, adapter.asString(value))) {
+		} else if (ArrayUtils.contains(blacklist, adapter.asString(value))) {
 			return null;
 		}
 
-		if(value instanceof Number) {
+		if (value instanceof Number) {
 			double number = ((Number) value).doubleValue();
 
-			if(number < min) {
+			if (number < min) {
 				number = min;
-			} else if(number > max) {
+			} else if (number > max) {
 				number = max;
 			}
 
-			if(value instanceof Byte) {
+			if (value instanceof Byte) {
 				return (byte) number;
 			}
 
-			if(value instanceof Double) {
+			if (value instanceof Double) {
 				return number;
 			}
 
-			if(value instanceof Float) {
+			if (value instanceof Float) {
 				return (float) number;
 			}
 
-			if(value instanceof Integer) {
+			if (value instanceof Integer) {
 				return (int) number;
 			}
 
-			if(value instanceof Long) {
+			if (value instanceof Long) {
 				return (long) number;
 			}
 
-			if(value instanceof Short) {
+			if (value instanceof Short) {
 				return (short) number;
 			}
 		}
@@ -396,13 +397,13 @@ final class Property {
 	void serialize(CommentedFileConfig config) throws IllegalAccessException {
 		Object value = validate(field.get(null), isArray);
 
-		if(value == null) {
+		if (value == null) {
 			value = defaultValue;
 		}
 
-		if(enumConstants == null) {
+		if (enumConstants == null) {
 			set(config, value);
-		} else if(!isArray) {
+		} else if (!isArray) {
 			set(config, ((Enum) value).name());
 		} else {
 			set(config, Arrays.stream((Enum[]) value).map(Enum::name).toArray(String[]::new));
@@ -410,10 +411,10 @@ final class Property {
 	}
 
 	void deserialize(CommentedFileConfig config) throws IllegalAccessException {
-		if(enumConstants == null) {
+		if (enumConstants == null) {
 			final Object value = get(config);
 
-			if(nonNull && value == null) {
+			if (nonNull && value == null) {
 				field.set(null, defaultValue);
 			} else {
 				final Object validated = validate(value, isArray);
@@ -423,13 +424,13 @@ final class Property {
 			return;
 		}
 
-		if(!isArray) {
+		if (!isArray) {
 			//Ignore underscores when matching enums
 			//Hopefully this will never cause issues
 			final String value = StringUtils.remove(getAsString(config), '_');
 
-			for(Enum element : enumConstants) {
-				if(StringUtils.remove(element.name(), '_').equalsIgnoreCase(value)) {
+			for (Enum element : enumConstants) {
+				if (StringUtils.remove(element.name(), '_').equalsIgnoreCase(value)) {
 					field.set(null, element);
 					return;
 				}
@@ -442,11 +443,11 @@ final class Property {
 		final String[] values = (String[]) get(config);
 		final List<Object> enumValues = new ArrayList<>(values.length);
 
-		for(String value : values) {
+		for (String value : values) {
 			value = StringUtils.remove(value, '_');
 
-			for(Enum element : enumConstants) {
-				if(StringUtils.remove(element.name(), '_').equalsIgnoreCase(value)) {
+			for (Enum element : enumConstants) {
+				if (StringUtils.remove(element.name(), '_').equalsIgnoreCase(value)) {
 					enumValues.add(element);
 					break;
 				}
